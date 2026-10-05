@@ -12,5 +12,9 @@
 %num_evals: A count of the number of times that you called
 %    rate_func_in when computing the next step
 function [XB,num_evals] = forward_euler_step(rate_func_in,t,XA,h)
-    %your code here
+    % calc dXdt of func
+    dXdT = rate_func_in(t, XA);
+    % calc forward euler
+    XB = XA + h * dXdT;
+    num_evals = 1;
 end
