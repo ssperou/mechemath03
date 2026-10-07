@@ -12,12 +12,21 @@ function plot_local_truncation()
     log_exmid_hlist = log10(ex_mid_hlist)'
     log_exmid_error = log10(ex_mid_error)
 
-    p = polyfit(log_exmid_hlist, log_exmid_error, 1)
-    yfit = polyval(p, log_exmid_hlist);
+    ex_p = polyfit(log_exmid_hlist, log_exmid_error, 1)
+    ex_yfit = polyval(ex_p, log_exmid_hlist);
+
+    % Forward Euler fit line
+    log_foreul_hlist = log10(forward_eul_hlist)'
+    log_foreul_error = log10(forward_eul_error)
+
+    foreul_p = polyfit(log_foreul_hlist, log_foreul_error, 1)
+    foreul_yfit = polyval(foreul_p, log_foreul_hlist);
     
     figure(1)
-    loglog(10.^log_exmid_hlist, 10.^yfit, '-', 'Linewidth', 1.5, 'Displayname',"Exp. Mid. Fit");
-
+    loglog(10.^log_exmid_hlist, 10.^ex_yfit, 'g-', 'Linewidth', 1.5, 'Displayname',"Exp. Mid. Fit");
+    hold on;
+    loglog(10.^log_foreul_hlist, 10.^foreul_yfit, 'm-', 'Linewidth', 1.5, 'Displayname',"Forw. Euler Fit");
+    hold on;
     loglog(ex_mid_hlist, ex_mid_error, 'r.', 'Linewidth', 1.5,'Displayname',"Explicit Midpoint");
     hold on;
     loglog(forward_eul_hlist, forward_eul_error, 'b.', 'Linewidth', 1.5, 'Displayname',"Forward Euler");
