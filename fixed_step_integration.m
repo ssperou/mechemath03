@@ -14,5 +14,9 @@
 %       num_evals: total number of calls made to rate_func_in during the integration
 function [t_list,X_list,h_avg, num_evals] = ...
         fixed_step_integration(rate_func_in,step_func,tspan,X0,h_ref)
-    %your code here
+    if step_func == "Forward Euler"
+        forward_euler_fixed_step_integration(rate_func_in,tspan,X0,h_ref);
+    elseif step_func == "Explicit Midpoint"
+        explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref);
+    end
 end
