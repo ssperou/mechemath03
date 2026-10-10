@@ -32,7 +32,7 @@ function [X, exit_flag, fun_count] = newton_solver(fun,X0,numerical_diff,dxmin,f
     iteration_flag = true;     % set flags True to start the while loop
     interval_flag = true;
     value_flag = true;
-    
+    fun_count = 0;
     % loop through newton's method until the root is found, or until
     % the iteration maximum is hit
     while interval_flag && value_flag && iteration_flag
@@ -42,7 +42,7 @@ function [X, exit_flag, fun_count] = newton_solver(fun,X0,numerical_diff,dxmin,f
         else 
             [J, num_evals] = approximate_jacobian(fun,X);
             fun_count = fun_count + num_evals;
-            F = fun(X);
+            F = fun(X)';
         end
 
         fun_count = fun_count + 1;

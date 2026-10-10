@@ -1,8 +1,8 @@
 % plot local truncation errors (currently for explicit methods)
 function plot_local_truncation(func, sol, t_ref, num_iter)
     arguments
-        func (1,:) function_handle
-        sol (1,:) function_handle
+        func (1,:) function_handle = @rate_func01
+        sol (1,:) function_handle = @solution01;
         t_ref (1,:) double = 0.439
         num_iter (1,:) double = 100
     end

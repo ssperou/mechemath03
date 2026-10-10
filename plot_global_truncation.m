@@ -1,7 +1,7 @@
 function plot_global_truncation(func,sol, t_span, num_iter)
     arguments
-        func (1,:) function_handle
-        sol (1,:) function_handle
+        func (1,:) function_handle = @rate_func01
+        sol (1,:) function_handle = @solution01
         t_span (1,:) double = [0, 40]
         num_iter (1,:) double = 100
     end
