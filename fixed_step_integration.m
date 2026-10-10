@@ -45,7 +45,7 @@ function [t_list,X_list,h_avg, num_evals] = ...
             if step_func == "Backward Euler"
                 [XB,iter] = backward_euler_step(rate_func_in,t,XA,h_ref);
             elseif step_func == "Implicit Midpoint"
-             [XB,iter] = implicit_midpoint_step(rate_func_in,t,XA,h_ref);
+                [XB,iter] = implicit_midpoint_step(rate_func_in,t,XA,h_ref);
             end
 
             X_list(j+1,:) = XB;

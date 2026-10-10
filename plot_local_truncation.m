@@ -37,6 +37,9 @@ function plot_local_truncation(func, sol, t_ref, num_iter)
     forward_euler_p = polyfit(log_h_list, log_forward_euler_error, 1);
     forward_euler_yfit = 10.^polyval(forward_euler_p, log_h_list);
     
+
+
+    % plot
     figure(1)
     loglog(10.^log_h_list, explicit_midpoint_yfit, '-', 'Linewidth', 1.5, 'Color', [0.5 1 0.5], 'Displayname',"Exp. Mid. Fit");
     hold on;
@@ -46,10 +49,10 @@ function plot_local_truncation(func, sol, t_ref, num_iter)
 
     
     title('Local Trunction Error against Timestep Size', 'Interpreter', 'Latex', 'FontSize',18);
-    legend('Location','northwest', 'Interpreter', 'Latex','FontSize',12)
-    xlabel("Step size (h)", 'Interpreter', 'Latex','FontSize',16)
-    ylabel("Measured LT error", 'Interpreter', 'Latex','FontSize',16)
-    set(gca,"TickLabelInterpreter",'latex')
+    legend('Location','northwest', 'Interpreter', 'Latex','FontSize',12);
+    xlabel("Step size (h)", 'Interpreter', 'Latex','FontSize',16);
+    ylabel("Measured LT error", 'Interpreter', 'Latex','FontSize',16);
+    set(gca,"TickLabelInterpreter",'latex');
 
 
    

@@ -1,3 +1,5 @@
+% plots example integration plots for provided method ("Explicit Midpoint",
+% "Forward Euler", "Backward Euler", "Implicit Midpoint")
 function rate_func_test(method)
 
     h_values = [0.1, 0.25, 0.45];
@@ -10,7 +12,7 @@ function rate_func_test(method)
     figure();
     hold on;
     grid on;
-    axis([0 10 -3 2])
+    axis([0 10 -3 2]);
      for i = 1:length(h_values)
 
         h_ref = h_values(i);
@@ -46,7 +48,7 @@ function rate_func_test(method)
     legend('Location', 'best','Interpreter', 'Latex','FontSize',12);
     hold off;
 
-    title(sprintf('%s Example Integration Plot', method), 'Interpreter', 'Latex','FontSize',18)
+    title(sprintf('%s Example Integration Plot', method), 'Interpreter', 'Latex','FontSize',18);
 
-    set(gca,"TickLabelInterpreter",'latex')
+    set(gca,"TickLabelInterpreter",'latex');
 end

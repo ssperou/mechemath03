@@ -43,5 +43,5 @@ function [J, num_evals] = approximate_jacobian(fun,X)
 
         dX(n) = 0; %reset the dx vector to [0,...,0]^T
     end
-    num_evals = 3
+    num_evals = 3;
 end
