@@ -1,6 +1,6 @@
 % plots example integration plots for provided method ("Explicit Midpoint",
 % "Forward Euler", "Backward Euler", "Implicit Midpoint")
-function rate_func_test(method)
+function plot_fixed_integration(method)
 
     h_values = [0.1, 0.25, 0.45];
     tspan = [0, 10];
