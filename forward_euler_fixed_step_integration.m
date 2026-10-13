@@ -33,7 +33,7 @@ function [t_list,X_list,h_avg, num_evals] = ...
         for j = 1:N
             t = t_list(j);
             XA = X_list(j,:);
-            [XB, iter] = forward_euler_step(rate_func_in, t, XA, h_avg);
+            [XB, iter] = forward_euler_step(rate_func_in, t, XA', h_avg);
             X_list(j+1,:) = XB;
             num_evals = num_evals + iter;
         end

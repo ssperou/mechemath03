@@ -13,5 +13,6 @@
 %           rate_func_in when computing the next step
 function [XB,num_evals] = backward_euler_step(rate_func_in,t,XA,h)
     function_wrapper = @(XB) (XA + h.*rate_func_in(t+h, XB) - XB);
-    [XB, ~, num_evals] = newton_solver(function_wrapper, XA);
+    [XB, ~, iter] = newton_solver(function_wrapper, XA);
+    num_evals = iter + 1;
 end

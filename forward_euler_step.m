@@ -16,6 +16,6 @@ function [XB,num_evals] = forward_euler_step(rate_func_in,t,XA,h)
     dXdT = rate_func_in(t, XA);
     
     % calc forward euler
-    XB = XA + h * dXdT;
+    XB = XA + h .* dXdT;
     num_evals = 1;
 end

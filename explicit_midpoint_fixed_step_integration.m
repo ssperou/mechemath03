@@ -11,7 +11,7 @@
 %h_avg: the average step size
 %num_evals: total number of calls made to rate_func_in during the integration
 function [t_list,X_list,h_avg, num_evals] = ...
-        explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
+    explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
    
     % extract t0 and tf
     t0 = tspan(1);
@@ -33,7 +33,7 @@ function [t_list,X_list,h_avg, num_evals] = ...
     for j = 1:N
         t = t_list(j);
         XA = X_list(j,:);
-        [XB, iter] = explicit_midpoint_step(rate_func_in, t, XA, h_avg);
+        [XB, iter] = explicit_midpoint_step(rate_func_in, t, XA', h_avg);
         X_list(j+1,:) = XB;
         num_evals = num_evals + iter;
     end

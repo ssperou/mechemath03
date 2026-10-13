@@ -12,9 +12,7 @@
 %num_evals: A count of the number of times that you called
 %           rate_func_in when computing the next step
 function [XB,num_evals] = explicit_midpoint_step(rate_func_in,t,XA,h)
-    
-    x_halfstep = XA + (h/2)*rate_func_in(t, XA);
-
-    XB = XA + h*rate_func_in(t+(h/2), x_halfstep);
-    num_evals = 1;
+    x_halfstep = XA + (h/2).*rate_func_in(t, XA);
+    XB = XA + h.*rate_func_in(t+(h/2), x_halfstep);
+    num_evals = 2;
 end

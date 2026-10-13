@@ -14,11 +14,6 @@
 %       num_evals: total number of calls made to rate_func_in during the integration
 function [t_list,X_list,h_avg, num_evals] = ...
         fixed_step_integration(rate_func_in,step_func,tspan,X0,h_ref)
-    % if step_func == "Forward Euler"
-    %     forward_euler_fixed_step_integration(rate_func_in,tspan,X0,h_ref);
-    % elseif step_func == "Explicit Midpoint"
-    %     explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref);
-    % end
 
     % extract t0 and tf
         t0 = tspan(1);
@@ -43,9 +38,9 @@ function [t_list,X_list,h_avg, num_evals] = ...
             XA = X_list(j,:);
 
             if step_func == "Backward Euler"
-                [XB,iter] = backward_euler_step(rate_func_in,t,XA,h_ref);
+                [XB,iter] = backward_euler_step(rate_func_in,t,XA',h_ref);
             elseif step_func == "Implicit Midpoint"
-                [XB,iter] = implicit_midpoint_step(rate_func_in,t,XA,h_ref);
+                [XB,iter] = implicit_midpoint_step(rate_func_in,t,XA',h_ref);
             end
 
             X_list(j+1,:) = XB;

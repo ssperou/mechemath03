@@ -42,11 +42,10 @@ function [X, exit_flag, fun_count] = newton_solver(fun,X0,numerical_diff,dxmin,f
         else 
             [J, num_evals] = approximate_jacobian(fun,X);
             fun_count = fun_count + num_evals;
-            F = fun(X)';
+            F = fun(X);
         end
 
         fun_count = fun_count + 1;
-
         X0 = X;   
         dx = J\F;     
         X = X0 - dx;               % otherwise continue computing
