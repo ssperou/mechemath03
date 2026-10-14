@@ -1,13 +1,13 @@
 % integration plots for provided method ("Explicit Midpoint",
 % "Forward Euler", "Backward Euler", "Implicit Midpoint")
-function plot_fixed_integration(method)
-    h_values = [0.45, 0.42, 0.1];
-    tspan = [0, 10];
+function [t_list, X_list] = plot_fixed_integration(method)
+    h_values = [0.45];
+    tspan = [0, 20];
     X0 = 1;
     rate_func = @rate_func01;
     func_sol = @solution01;
 
-    clf
+    cla
     figure(1);
     hold on;
     grid on;
