@@ -10,16 +10,17 @@ function plot_stability()
     %     plot(t_lists{i}, x_lists{i},'--','LineWidth', 1.5,'DisplayName', sprintf('h = 0.45'));
     % end
 
-    methods = ["Explicit Midpoint", "Implicit Midpoint", "Backward Euler", "Forward Euler"];
+    methods = ["Explicit Midpoint", "Explicit Midpoint", "Implicit Midpoint", ...
+        "Forward Euler", "Backward Euler"];
 
-    figure; 
+    clf
+    figure(1); 
     
-    for i = 1:4
+    for i = 1:5
         hiddenFig = figure('Visible', 'off'); 
         
-        plot_fixed_integration(methods(i)); 
-        
         sourceLine = findobj(hiddenFig, 'Type', 'line');
+        plot_fixed_integration(methods(i), 0.38); 
         subplot(4, 1, i); 
         mainAxis = gca;
         
@@ -27,4 +28,5 @@ function plot_stability()
         
         close(hiddenFig);
     end
+
 end

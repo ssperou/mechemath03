@@ -1,7 +1,7 @@
 % integration plots for provided method ("Explicit Midpoint",
 % "Forward Euler", "Backward Euler", "Implicit Midpoint")
-function [t_list, X_list] = plot_fixed_integration(method)
-    h_values = [0.45];
+function [t_list, X_list] = plot_fixed_integration(method,href)
+    %h_values = [0.45];
     tspan = [0, 20];
     X0 = 1;
     rate_func = @rate_func01;
@@ -13,8 +13,8 @@ function [t_list, X_list] = plot_fixed_integration(method)
     grid on;
     axis([0 10 -3 2]);
 
-    for i = 1:length(h_values)
-        h_ref = h_values(i);
+    for i = 1:length(href)
+        h_ref = href(i);
         if method == "Explicit Midpoint"
             [t_list,X_list] = explicit_midpoint_fixed_step_integration( ...
                 rate_func, tspan, X0, h_ref);
@@ -43,7 +43,7 @@ function [t_list, X_list] = plot_fixed_integration(method)
     x_sols = func_sol(t_list);
     psol = plot(t_list, x_sols, 'LineWidth', 1.5, 'DisplayName', 'Analytical Solution');
     uistack(psol, 'bottom');
-    legend('Location', 'southwest','Interpreter', 'Latex','FontSize',12);
+    legend('Location', 'eastoutside','Interpreter', 'Latex','FontSize',12);
     hold off;
     title(sprintf('%s Example Integration Plot', method), 'Interpreter', 'Latex','FontSize',18);
     set(gca,"TickLabelInterpreter",'latex');
