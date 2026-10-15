@@ -1,14 +1,14 @@
 % plot local truncation errors (currently for explicit methods)
 function plot_local_truncation(func, sol, t_ref, num_iter)
     arguments
-        func (1,:) function_handle = @rate_func01
+        func (1,:) function_handle = @rate_func01;
         sol (1,:) function_handle = @solution01;
         t_ref (1,:) double = 0.439
         num_iter (1,:) double = 100
     end
 
     X0 = sol(t_ref);
-    h_list = logspace(-5,1,num_iter);
+    h_list = logspace(-5,-1,num_iter);
     explicit_midpoint_error = zeros(num_iter,1);
     forward_euler_error = zeros(num_iter, 1);
     implicit_midpoint_error = zeros(num_iter,1);
@@ -59,7 +59,9 @@ function plot_local_truncation(func, sol, t_ref, num_iter)
     backward_p = backward_euler_coeff(1)
     explicit_p = explicit_midpoint_coeff(1)
     implicit_p = implicit_midpoint_coeff(1)
+    
 
+    loglog()
     % % FIT LINE CODE
     % explicit_midpoint_fit = 10.^polyval(explicit_midpoint_coeff, log_h_list);
     % forward_euler_fit = 10.^polyval(forward_euler_coeff, log_h_list);

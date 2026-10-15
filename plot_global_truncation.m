@@ -1,13 +1,13 @@
 function plot_global_truncation(func, sol, t_span, num_iter)
     arguments
-        func (1,:) function_handle = @rate_func01
-        sol (1,:) function_handle = @solution01
+        func (1,:) function_handle = @rate_func02
+        sol (1,:) function_handle = @solution02
         t_span (1,:) double = [0, 20]
         num_iter (1,:) double = 100
     end
 
     X0 = sol(t_span(1));
-    h_list = logspace(-5,0,num_iter);
+    h_list = logspace(-5,-3,num_iter);
     explicit_midpoint_error = zeros(num_iter,1);
     forward_euler_error = zeros(num_iter, 1);
 
@@ -28,10 +28,15 @@ function plot_global_truncation(func, sol, t_span, num_iter)
 
         % calculate error
         x_true = sol(t_span(end));
-        explicit_midpoint_error(i) = norm(explicit_midpoint_list(end) - x_true);
-        forward_euler_error(i) = norm(forward_euler_list(end) - x_true);
-        implicit_midpoint_error(i) = norm(implicit_midpoint_list(end) - x_true);
-        backward_euler_error(i) = norm(backward_euler_list(end) - x_true);
+       % explicit_midpoint_error(i) = norm(explicit_midpoint_list(end,:).' - x_true);
+        explicit_midpoint_error(i) = norm(explicit_midpoint_list(end,:).' - x_true);
+        forward_euler_error(i) = norm(forward_euler_list(end,:).' - x_true);
+        implicit_midpoint_error(i) = norm(implicit_midpoint_list(end,:).' - x_true);
+        backward_euler_error(i) = norm(backward_euler_list(end,:).' - x_true);
+        % explicit_midpoint_error(i) = norm(explicit_midpoint_list(end) - x_true);
+        % forward_euler_error(i) = norm(forward_euler_list(end) - x_true);
+        % implicit_midpoint_error(i) = norm(implicit_midpoint_list(end) - x_true);
+        % backward_euler_error(i) = norm(backward_euler_list(end) - x_true);
 
         % save iterations
         explicit_evals(i) = explicit_iter;
@@ -64,18 +69,23 @@ function plot_global_truncation(func, sol, t_span, num_iter)
     % %backward_euler_fit = 10.^polyval(backward_euler_p, log_h_list);
     
     %%%%%%% FUN COUNT P-VALUES
+    %fit_range = 
     % Explicit Midpoint p-value calculation
     log_explicit_midpoint_error = log10(explicit_midpoint_error);
-    explicit_midpoint_coeff = polyfit(explicit_evals, log_explicit_midpoint_error, 1);
+    log_explicit_evals = log10(explicit_evals);
+    explicit_midpoint_coeff = polyfit(log_explicit_evals, log_explicit_midpoint_error, 1);
     % Forward Euler p-value calculation
+    log_forward_evals = log10(forward_evals);
     log_forward_euler_error = log10(forward_euler_error);
-    forward_euler_coeff = polyfit(forward_evals, log_forward_euler_error, 1);
+    forward_euler_coeff = polyfit(log_forward_evals, log_forward_euler_error, 1);
     % % Implicit Midpoint p-value calculation
+    log_implicit_midpoint_evals = log10(implicit_evals);
     log_implicit_midpoint_error = log10(implicit_midpoint_error);
-    implicit_midpoint_coeff = polyfit(implicit_evals, log_implicit_midpoint_error, 1);
+    implicit_midpoint_coeff = polyfit(log_implicit_midpoint_evals, log_implicit_midpoint_error, 1);
     % Backward Euler p-value calculation
+    log_backward_euler_evals = log10(backward_evals);
     log_backward_euler_error = log10(backward_euler_error);
-    backward_euler_coeff = polyfit(backward_evals, log_backward_euler_error, 1);
+    backward_euler_coeff = polyfit(log_backward_euler_evals, log_backward_euler_error, 1);
     
     %%%% PRINT P-VALUES
     forward_p = forward_euler_coeff(1)
