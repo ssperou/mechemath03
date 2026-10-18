@@ -1,7 +1,7 @@
 function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num_iter)
     arguments
         step_func (1,:) string
-        var_test (1,:) string = "Step Size"
+        var_test (1,:) string = "Fun Count"
         rate_func (1,:) function_handle = @rate_func02
         sol (1,:) function_handle = @solution02
         t_span (1,:) double = [0, 20]
@@ -42,8 +42,11 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
         if var_test == "Fun Count"
             % fun count p-values
             log_explicit_evals = log10(explicit_evals);
+            log_explicit_midpoint_error = log10(explicit_midpoint_error);
             explicit_midpoint_eval_slope = polyfit(log_explicit_evals, log_explicit_midpoint_error, 1);
+            
             log_forward_evals = log10(forward_evals);
+            log_forward_euler_error = log10(forward_euler_error);
             forward_euler_eval_slope = polyfit(log_forward_evals, log_forward_euler_error, 1);
     
             %%%%%% FUN COUNT FIT LINE CODE
@@ -52,13 +55,15 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
             log_explicit_midpoint_error = log10(explicit_midpoint_error(1:90));
             explicit_midpoint_slope = polyfit(log_explicit_evals, log_explicit_midpoint_error, 1);
             explicit_midpoint_fit = 10.^polyval(explicit_midpoint_slope, log_explicit_evals);
+            explicit_midpoint_p = explicit_midpoint_slope(1)
 
             % Forward Euler fit line
             log_forward_evals = log10(forward_evals(1:90));
             log_forward_euler_error = log10(forward_euler_error(1:90));
             forward_euler_slope = polyfit(log_forward_evals, log_forward_euler_error, 1);
             forward_euler_fit = 10.^polyval(forward_euler_slope, log_forward_evals);
-    
+            forward_euler_p = forward_euler_slope(1)
+
             loglog(explicit_evals(1:90), explicit_midpoint_fit, '-', 'Linewidth', 2, 'Color', [0.5 1 0.5], 'Displayname',"Exp. Mid. Fit");
             hold on;
             loglog(forward_evals(1:90), forward_euler_fit, '-', 'Linewidth', 2, 'Color', [1 0.5 0.5], 'Displayname',"Forw. Euler Fit");
@@ -66,10 +71,14 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
         elseif var_test == "Step Size"
             log_explicit_midpoint_error = log10(explicit_midpoint_error);
             explicit_midpoint_step_slope = polyfit(log_h_list, log_explicit_midpoint_error, 1);
-            explicit_midpoint_fit = 10.^polyval(explicit_midpoint_slope, log_h_list);
+            explicit_midpoint_fit = 10.^polyval(explicit_midpoint_step_slope, log_h_list);
+            explicit_midpoint_p = explicit_midpoint_step_slope(1)
+
             log_forward_euler_error = log10(forward_euler_error);
             forward_euler_step_slope = polyfit(log_h_list, log_forward_euler_error, 1);
-            forward_euler_fit = 10.^polyval(forward_euler_p, log_h_list);
+            forward_euler_fit = 10.^polyval(forward_euler_step_slope, log_h_list);
+            forward_euler_p = forward_euler_step_slope(1)
+            
     
     
             loglog(h_list(1:90), explicit_midpoint_fit, '-', 'Linewidth', 2, 'Color', [0.5 1 0.5], 'Displayname',"Exp. Mid. Fit");
@@ -86,8 +95,8 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
             set(gca,"TickLabelInterpreter",'latex');
             fontsize(scale=1.5)
             end
-
-    elseif step_func == "Implicit Midopint"
+   
+    elseif step_func == "Implicit Midpoint"
         implicit_midpoint_error = zeros(num_iter,1);
         implicit_evals = zeros(num_iter,1);
         
@@ -105,6 +114,12 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
         end
 
         if var_test == "Fun Count"
+            log_implicit_evals = log10(implicit_evals);
+            log_implicit_midpoint_error = log10(implicit_midpoint_error);
+            implicit_midpoint_slope = polyfit(log_implicit_evals,log_implicit_midpoint_error, 1);
+            implicit_midpoint_p = implicit_midpoint_slope(1)
+
+          
         elseif var_test == "Step Size"
         %%%%%%% STEP SIZE P-VALUE CALCULATIONS
     
@@ -112,12 +127,16 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
         log_implicit_midpoint_error = log10(implicit_midpoint_error);
         implicit_midpoint_slope = polyfit(log_h_list, log_implicit_midpoint_error, 1);
         %implicit_midpoint_fit = 10.^polyval(implicit_midpoint_slope, log_h_list);
+        implicit_p = implicit_midpoint_slope(1)
+        end 
     
+
     elseif step_func == "Backward Euler"
         backward_euler_error = zeros(num_iter,1);
         backward_evals = zeros(num_iter,1);
     
-        for i = 1:num_iter        
+        for i = 1:num_iter 
+            h = h_list(i);
             [~, backward_euler_list, ~, backward_iter] = fixed_step_integration(rate_func, 'Backward Euler', t_span, X0, h);    
     
             % calculate error
@@ -130,10 +149,11 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
         end
 
         %%%%%%% STEP SIZE P-VALUE CALCULATIONS
-        log_h_list = log10(h_list)';
-        log_backward_euler_error = log10(backward_euler_error);
-        backward_euler_coeff = polyfit(log_h_list, log_backward_euler_error, 1);
-    end
+        % log_h_list = log10(h_list)';
+        % log_backward_euler_error = log10(backward_euler_error);
+        % backward_euler_coeff = polyfit(log_h_list, log_backward_euler_error, 1);
+        % backward_euler_p = backward_euler_coeff(1)
+   
 
     %%%% FIT LINE CODE
     % %backward_euler_fit = 10.^polyval(backward_euler_p, log_h_list);
@@ -150,35 +170,51 @@ function plot_global_truncation(step_func, var_test, rate_func, sol, t_span, num
     % backward_euler_coeff = polyfit(log_backward_euler_evals, log_backward_euler_error, 1);
     
 
-    if var_test == "Fun Count"
-        %%%%%%% RATE CALL PLOTS
-        loglog(explicit_evals, explicit_midpoint_error, '.', 'Color', [0 0.5 0], 'Displayname',"Explicit Midpoint");
-        hold on; % call hold on after calling loglog
-        loglog(forward_evals, forward_euler_error, '.', 'Color', [0.5 0 0], 'Displayname',"Forward Euler");
-        % loglog(implicit_evals, implicit_midpoint_error, '.', 'Color', [0 0.5 0],'Displayname',"Implicit Midpoint");
-        % loglog(backward_evals, backward_euler_error, '.', 'Color', [0.5 0 0],'Displayname',"Backward Euler");
+        if var_test == "Fun Count"
+           % fun count p-values
+            log_backward_evals = log10(backward_evals);
+            log_backward_euler_error = log10(backward_euler_error);
+            backward_euler_eval_slope = polyfit(log_backward_evals, log_backward_euler_error, 1);
     
-        % plot styling
-        title('Global Truncation Error $\epsilon$ vs Function Calls for Explicit Methods', 'Interpreter', 'Latex', 'FontSize',18);
-        legend('Location','northeast', 'Interpreter', 'Latex','FontSize',16);
-        xlabel("Number of Rate Function Calls", 'Interpreter', 'Latex','FontSize',16);
-        ylabel("Global Truncation Error $\epsilon$ (-)", 'Interpreter', 'Latex','FontSize',16);
-        set(gca,"TickLabelInterpreter",'latex');
-        fontsize(scale=1)
+            %%%%%% FUN COUNT FIT LINE CODE
 
-    elseif var_test == "Step Size"
-        %%%%%%%% STEP SIZE PLOTS
-        hold on; % call hold on after calling loglog
-        % loglog(h_list, implicit_midpoint_error, '.', 'Color', [0 0.5 0],'Displayname',"Implicit Midpoint");
-        % loglog(h_list, backward_euler_error, '.', 'Color', [0.5 0 0],'Displayname',"Backward Euler");
+            % Forward Euler fit line
+            log_backward_evals = log10(backward_evals(1:90));
+            log_backward_euler_error = log10(backward_euler_error(1:90));
+            backward_euler_slope = polyfit(log_backward_evals, log_backward_euler_error, 1);
+            backward_euler_fit = 10.^polyval(backward_euler_slope, log_backward_evals);
+            backward_euler_p = backward_euler_slope(1)
+            
+         
+            %%%%%%% RATE CALL PLOTS
+            loglog(explicit_evals, explicit_midpoint_error, '.', 'Color', [0 0.5 0], 'Displayname',"Explicit Midpoint");
+            hold on; % call hold on after calling loglog
+            loglog(forward_evals, forward_euler_error, '.', 'Color', [0.5 0 0], 'Displayname',"Forward Euler");
+            % loglog(implicit_evals, implicit_midpoint_error, '.', 'Color', [0 0.5 0],'Displayname',"Implicit Midpoint");
+            % loglog(backward_evals, backward_euler_error, '.', 'Color', [0.5 0 0],'Displayname',"Backward Euler");
+        
+            % plot styling
+            title('Global Truncation Error $\epsilon$ vs Function Calls for Explicit Methods', 'Interpreter', 'Latex', 'FontSize',18);
+            legend('Location','northeast', 'Interpreter', 'Latex','FontSize',16);
+            xlabel("Number of Rate Function Calls", 'Interpreter', 'Latex','FontSize',16);
+            ylabel("Global Truncation Error $\epsilon$ (-)", 'Interpreter', 'Latex','FontSize',16);
+            set(gca,"TickLabelInterpreter",'latex');
+            fontsize(scale=1)
     
-        % plot styling
-        title('Global Truncation Error $\epsilon$ against Timestep Size $h$', 'Interpreter', 'Latex', 'FontSize',18);
-        legend('Location','northwest', 'Interpreter', 'Latex','FontSize',12);
-        xlabel("Step size $h$ (-)", 'Interpreter', 'Latex','FontSize',16);
-        ylabel("Global Truncation Error $\epsilon$ (-)", 'Interpreter', 'Latex','FontSize',16);
-        set(gca,"TickLabelInterpreter",'latex');
-        fontsize(scale=1.5)
-    
-    end
+        elseif var_test == "Step Size"
+            %%%%%%%% STEP SIZE PLOTS
+            hold on; % call hold on after calling loglog
+            % loglog(h_list, implicit_midpoint_error, '.', 'Color', [0 0.5 0],'Displayname',"Implicit Midpoint");
+            % loglog(h_list, backward_euler_error, '.', 'Color', [0.5 0 0],'Displayname',"Backward Euler");
+        
+            % plot styling
+            title('Global Truncation Error $\epsilon$ against Timestep Size $h$', 'Interpreter', 'Latex', 'FontSize',18);
+            legend('Location','northwest', 'Interpreter', 'Latex','FontSize',12);
+            xlabel("Step size $h$ (-)", 'Interpreter', 'Latex','FontSize',16);
+            ylabel("Global Truncation Error $\epsilon$ (-)", 'Interpreter', 'Latex','FontSize',16);
+            set(gca,"TickLabelInterpreter",'latex');
+            fontsize(scale=1.5)
+          end
+       
+
 end

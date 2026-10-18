@@ -31,13 +31,14 @@ function [t_list, X_list] = plot_fixed_integration(method,href)
             disp("not a valid method. try again")
         end 
         
-        plot(t_list, X_list, '--','LineWidth', 1.5,'DisplayName', sprintf('h = %g ', h_ref));
+        plot(t_list, X_list, '-o','LineWidth', 1.5,'MarkerFaceColor', 'b', ... 
+    'MarkerSize', 1.75, 'MarkerEdgeColor', 'b','DisplayName', sprintf('h = %g ', h_ref));
         
     end
     
     %plot 
     xlabel('Time (-)', 'Interpreter', 'Latex','FontSize',16);
-    ylabel('X(t) (-)', 'Interpreter', 'Latex','FontSize',16);
+    ylabel('$X(t) (-)$', 'Interpreter', 'Latex','FontSize',16);
     hold on;
 
     x_sols = func_sol(t_list);
@@ -47,4 +48,8 @@ function [t_list, X_list] = plot_fixed_integration(method,href)
     hold off;
     title(sprintf('%s Example Integration Plot', method), 'Interpreter', 'Latex','FontSize',18);
     set(gca,"TickLabelInterpreter",'latex');
+
+    % save plot as high res
+    % myfig = gcf(); %set myfig to the current figure
+    % exportgraphics(myfig , 'plot_name.png', 'Resolution', 600); %saves plot to plot_name at high resolution
 end

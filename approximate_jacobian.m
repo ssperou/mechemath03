@@ -14,6 +14,7 @@ function [J, num_evals] = approximate_jacobian(fun,X)
     num_in = length(X);     %determine dimension of the input vector
     num_out = length(f0);   %determine dimension of the output vector
     
+    num_evals = 1;
     %initialize the dX vector
     dX = zeros(size(X));
 
@@ -34,7 +35,7 @@ function [J, num_evals] = approximate_jacobian(fun,X)
         %the result should be a vector quantity
         f_right = fun(X+dX);
         f_left = fun(X-dX);
-
+        num_evals = num_evals + 2;
         %approximate the first derivative
         dfdx = (f_right-f_left)./(2*h);
 
@@ -43,5 +44,5 @@ function [J, num_evals] = approximate_jacobian(fun,X)
 
         dX(n) = 0; %reset the dx vector to [0,...,0]^T
     end
-    num_evals = 3;
+    
 end
