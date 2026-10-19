@@ -14,6 +14,8 @@ function plot_local_truncation(func, sol, t_ref, num_iter)
     implicit_midpoint_error = zeros(num_iter,1);
     backward_euler_error = zeros(num_iter, 1);
     solution_list = zeros(num_iter, 1);
+    clf
+    figure(1)
 
     for i = 1:num_iter
         h = h_list(i);
@@ -30,67 +32,66 @@ function plot_local_truncation(func, sol, t_ref, num_iter)
         backward_euler_error(i) = norm(backward_euler - x_true);
     end
 
-    %%%%%%% P-VALUE CALCULATION
-    h_filter = h_list <= 1e-2;
-    log_h_list = log10(h_list(h_filter))';
-    
-    % solution p-value calculation
-    log_solution_list = log10(solution_list(h_filter));
-    solution_coeff = polyfit(log_h_list, log_solution_list, 1);
-
-    % Explicit Midpoint p-value calculation
-    log_explicit_midpoint_error = log10(explicit_midpoint_error(h_filter));
-    explicit_midpoint_coeff = polyfit(log_h_list, log_explicit_midpoint_error, 1);
-
-    % Forward Euler p-value calculation
-    log_forward_euler_error = log10(forward_euler_error(h_filter));
-    forward_euler_coeff = polyfit(log_h_list, log_forward_euler_error, 1);
-    
-    % % % Implicit Midpoint p-value calculation
-    log_implicit_midpoint_error = log10(implicit_midpoint_error(h_filter));
-    implicit_midpoint_coeff = polyfit(log_h_list, log_implicit_midpoint_error, 1);
-
-    % Backward Euler p-value calculation
-    log_backward_euler_error = log10(backward_euler_error(h_filter));
-    backward_euler_coeff = polyfit(log_h_list, log_backward_euler_error, 1);
-
-    % % P-VALUES
-    solution_p = solution_coeff(1)
-    forward_p = forward_euler_coeff(1)
-    backward_p = backward_euler_coeff(1)
-    explicit_p = explicit_midpoint_coeff(1)
-    implicit_p = implicit_midpoint_coeff(1)
-    
-
-   
-    % FIT LINE CODE
-    explicit_midpoint_fit = 10.^polyval(explicit_midpoint_coeff, log_h_list);
-    forward_euler_fit = 10.^polyval(forward_euler_coeff, log_h_list);
-    solution_fit = 10.^polyval(solution_coeff, log_h_list);
-
-    %%%%%% FIT LINE PLOTS
-    figure(1)
-    loglog(10.^log_h_list, explicit_midpoint_fit, '-', 'Linewidth', 2, 'Color', [0.5 1 0.5], 'Displayname',"Exp. Mid. Fit");
-    hold on;
-    grid on;
-    loglog(10.^log_h_list, forward_euler_fit, '-', 'Linewidth', 2, 'Color', [1 0.5 0.5], 'Displayname',"Forw. Euler Fit");
-    loglog(10.^log_h_list, solution_fit, '-', 'Linewidth', 2, 'Color', [0 0 1], 'Displayname',"Abs. Diff. Fit");
+    % %%%%%%% P-VALUE CALCULATION
+    % h_filter = h_list <= 1e-2;
+    % log_h_list = log10(h_list(h_filter))';
+    % 
+    % % solution p-value calculation
+    % log_solution_list = log10(solution_list(h_filter));
+    % solution_coeff = polyfit(log_h_list, log_solution_list, 1);
+    % 
+    % % Explicit Midpoint p-value calculation
+    % log_explicit_midpoint_error = log10(explicit_midpoint_error(h_filter));
+    % explicit_midpoint_coeff = polyfit(log_h_list, log_explicit_midpoint_error, 1);
+    % 
+    % % Forward Euler p-value calculation
+    % log_forward_euler_error = log10(forward_euler_error(h_filter));
+    % forward_euler_coeff = polyfit(log_h_list, log_forward_euler_error, 1);
+    % 
+    % % % % Implicit Midpoint p-value calculation
+    % log_implicit_midpoint_error = log10(implicit_midpoint_error(h_filter));
+    % implicit_midpoint_coeff = polyfit(log_h_list, log_implicit_midpoint_error, 1);
+    % 
+    % % Backward Euler p-value calculation
+    % log_backward_euler_error = log10(backward_euler_error(h_filter));
+    % backward_euler_coeff = polyfit(log_h_list, log_backward_euler_error, 1);
+    % 
+    % % % P-VALUES
+    % solution_p = solution_coeff(1)
+    % forward_p = forward_euler_coeff(1)
+    % backward_p = backward_euler_coeff(1)
+    % explicit_p = explicit_midpoint_coeff(1)
+    % implicit_p = implicit_midpoint_coeff(1)
+    % 
+    % 
+    % 
+    % % FIT LINE CODE
+    % explicit_midpoint_fit = 10.^polyval(explicit_midpoint_coeff, log10(h_list));
+    % forward_euler_fit = 10.^polyval(forward_euler_coeff, log10(h_list));
+    % solution_fit = 10.^polyval(solution_coeff, log10(h_list));
+    % 
+    % %%%%%% FIT LINE PLOTS
+    % loglog(10.^log10(h_list), explicit_midpoint_fit, '-', 'Linewidth', 5, 'Color', [0.5 1 0.5], 'Displayname',"Exp. Mid. Fit");
+    % hold on;
+    % grid on;
+    % loglog(10.^log10(h_list), forward_euler_fit, '-', 'Linewidth', 5, 'Color', [1 0.5 0.5], 'Displayname',"Forw. Euler Fit");
+    % loglog(10.^log10(h_list), solution_fit, '-', 'Linewidth', 5, 'Color', [0.6 0.6 1], 'Displayname',"Abs. Diff. Fit");
 
 
     %%%%%%% STEP SIZE PLOTS
-    loglog(h_list, explicit_midpoint_error, '.', 'markersize', 7, 'Color', [0 0.5 0], 'Displayname',"Explicit Midpoint");
+    loglog(h_list, explicit_midpoint_error, '.', 'markersize', 25, 'Color', [0 0.65 0], 'Displayname',"Explicit Midpoint");
     hold on;
     grid on
-    loglog(h_list, forward_euler_error, '.', 'markersize', 7, 'Color', [0.5 0 0], 'Displayname',"Forward Euler");
-    % loglog(h_list, implicit_midpoint_error, '.', 'markersize', 7, 'Color', [0 0.5 0],'Displayname',"Implicit Midpoint");
-    % loglog(h_list, backward_euler_error, '.', 'markersize', 7, 'Color', [0.5 0 0],'Displayname',"Backward Euler");
-    loglog(h_list, solution_list,'.', 'markersize', 7, 'Color', [0 0 0.5], 'Displayname',"Absolute Difference");
+    loglog(h_list, forward_euler_error, '.', 'markersize', 25, 'Color', [0.65 0 0], 'Displayname',"Forward Euler");
+    loglog(h_list, implicit_midpoint_error, '.', 'markersize', 15, 'Color', [0.5 1 0.5],'Displayname',"Implicit Midpoint");
+    loglog(h_list, backward_euler_error, '.', 'markersize', 15, 'Color', [1 0.5 0.5],'Displayname',"Backward Euler");
+    loglog(h_list, solution_list,'.', 'markersize', 15, 'Color', [0 0 0.75], 'Displayname',"Absolute Difference");
 
-    title('Local Trunction Error $\epsilon$ for Explicit Methods vs Timesteps', 'Interpreter', 'Latex', 'FontSize',18);
-    legend('Location','northwest', 'Interpreter', 'Latex','FontSize',12);
+    title('Local Truncation Error $\epsilon$ for Four Methods vs Timesteps', 'Interpreter', 'Latex', 'FontSize',16);
+    legend('Location','southeast', 'Interpreter', 'Latex','FontSize',12);
     xlabel("Step size $h$ (-)", 'Interpreter', 'Latex','FontSize',16);
     ylabel("Local Truncation Error $\epsilon$ (-)", 'Interpreter', 'Latex','FontSize',16);
     set(gca,"TickLabelInterpreter",'latex');
-    fontsize(scale=1.5)  
+    fontsize(scale=2)  
    
 end

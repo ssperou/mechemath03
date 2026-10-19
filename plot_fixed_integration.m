@@ -1,17 +1,21 @@
 % integration plots for provided method ("Explicit Midpoint",
 % "Forward Euler", "Backward Euler", "Implicit Midpoint")
-function [t_list, X_list] = plot_fixed_integration(method,href)
-    %h_values = [0.45];
-    tspan = [0, 20];
+function [t_list, X_list] = plot_fixed_integration(method, href)
+    arguments
+        method (1,:) string
+        href (1,:) double = [0.45 2 3]
+    end
+    tspan = [0, 10];
     X0 = 1;
     rate_func = @rate_func01;
     func_sol = @solution01;
+    colors = [0 0 0.7; 0.5 0.25 0; 0.75 0.6 0];
 
-    cla
+    clf
     figure(1);
     hold on;
     grid on;
-    axis([0 10 -3 2]);
+    axis([tspan(1) tspan(2) -3 2]);
 
     for i = 1:length(href)
         h_ref = href(i);
@@ -31,25 +35,24 @@ function [t_list, X_list] = plot_fixed_integration(method,href)
             disp("not a valid method. try again")
         end 
         
-        plot(t_list, X_list, '-o','LineWidth', 1.5,'MarkerFaceColor', 'b', ... 
-    'MarkerSize', 1.75, 'MarkerEdgeColor', 'b','DisplayName', sprintf('h = %g ', h_ref));
+        plot(t_list, X_list, '-o','LineWidth', 2,'MarkerFaceColor', 'k', ... 
+    'MarkerSize', 3, 'MarkerEdgeColor', colors(i,:),'DisplayName', sprintf('h = %g ', h_ref));
         
     end
     
     %plot 
-    xlabel('Time (-)', 'Interpreter', 'Latex','FontSize',16);
-    ylabel('$X(t) (-)$', 'Interpreter', 'Latex','FontSize',16);
+    xlabel('Time (-)', 'Interpreter', 'Latex','FontSize',32);
+    ylabel('$X(t)$ (-)', 'Interpreter', 'Latex','FontSize',32);
     hold on;
-
-    x_sols = func_sol(t_list);
-    psol = plot(t_list, x_sols, 'LineWidth', 1.5, 'DisplayName', 'Analytical Solution');
+    
+    sol_t = linspace(tspan(1), tspan(2), 200);
+    x_sols = func_sol(sol_t);
+    psol = plot(sol_t, x_sols, 'LineWidth', 3, 'DisplayName', 'Analytical Solution');
     uistack(psol, 'bottom');
-    legend('Location', 'eastoutside','Interpreter', 'Latex','FontSize',12);
+    legend('Location', 'southwest','Interpreter', 'Latex','FontSize',16);
     hold off;
-    title(sprintf('%s Example Integration Plot', method), 'Interpreter', 'Latex','FontSize',18);
-    set(gca,"TickLabelInterpreter",'latex');
+    title(sprintf('%s Approximation vs Solution', method), 'Interpreter', 'Latex','FontSize',34);
+    set(gca,"TickLabelInterpreter",'latex','FontSize',18);
+    fontsize(scale=1.75)
 
-    % save plot as high res
-    % myfig = gcf(); %set myfig to the current figure
-    % exportgraphics(myfig , 'plot_name.png', 'Resolution', 600); %saves plot to plot_name at high resolution
 end
